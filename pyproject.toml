@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "zess"
+version = "0.1.0"
+description = "A Chess engine"
+authors = ["arpitchakladar <54011232+arpitchakladar@users.noreply.github.com>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+pygame = "^2.1.2"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
