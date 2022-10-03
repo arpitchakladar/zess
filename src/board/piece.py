@@ -12,7 +12,7 @@ class PieceType(Enum):
     QUEEN = 4
     KING = 5
 
-    def __str__(self):
+    def __str__(self) -> str:
         return piece_names[self.value]
 
 class Piece:
@@ -20,7 +20,7 @@ class Piece:
     piece_type: PieceType
     side: Side
 
-    def __init__(self, side: Side, piece_type: PieceType, position: Position):
+    def __init__(self, side: Side, piece_type: PieceType, position: Position) -> None:
         self.position = position
         self.side = side
         self.piece_type = piece_type

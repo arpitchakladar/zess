@@ -2,7 +2,7 @@ class Position:
     column: int
     row: int
 
-    def __init__(self, column: int, row: int):
+    def __init__(self, column: int, row: int) -> None:
         self.column = column
         self.row = row
 
