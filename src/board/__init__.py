@@ -1,4 +1,4 @@
-from typing import NoReturn, Callable, Optional
+from typing import Callable, Optional
 from position import Position
 from board.side import Side
 from board.piece import Piece, PieceType
@@ -9,7 +9,7 @@ class Board:
     def __init__(self) -> None:
         self.pieces = []
 
-    def arrange_pieces(self) -> NoReturn:
+    def arrange_pieces(self) -> None:
         for i in range(8):
             row: list[Optional[Piece]] = [None for i in range(8)]
             piece_type = PieceType.KING
@@ -27,7 +27,7 @@ class Board:
             row[6] = Piece(Side.BLACK, PieceType.PAWN, Position(i, 6))
             self.pieces.append(row)
 
-    def for_each_square(self, func: Callable[[Position, Optional[Piece]], NoReturn]) -> NoReturn:
+    def for_each_square(self, func: Callable[[Position, Optional[Piece]], None]) -> None:
         for i in range(8):
             for j in range(8):
                 piece = self.pieces[i][j]

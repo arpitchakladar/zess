@@ -1,4 +1,4 @@
-from typing import NoReturn, Optional
+from typing import Optional
 import pygame
 from position import Position
 from board import Board
@@ -12,7 +12,7 @@ class Game:
     font: pygame.font.Font
     side: Side
     board: Board
-    piece_images: list[pygame.Surface]
+    piece_images: list[pygame.surface.Surface]
 
     def __init__(self, side: Side = Side.WHITE, display_size: int = 640) -> None:
         pygame.init()
@@ -37,11 +37,11 @@ class Game:
             piece_image = pygame.transform.scale(piece_image, (piece_size, piece_size))
             self.piece_images.append(piece_image)
 
-    def draw_board(self) -> NoReturn:
+    def draw_board(self) -> None:
         square_size: int = int(self.display_size / 8)
         dark_color: tuple[int, int, int] = (125, 206, 160)
         light_color: tuple[int, int, int] = (232, 248, 245)
-        def draw_square(position: Position, piece: Optional[Piece]) -> NoReturn:
+        def draw_square(position: Position, piece: Optional[Piece]) -> None:
             i, j = position.column, position.row
             if self.side == Side.BLACK:
                 i = 7 - i
@@ -67,7 +67,7 @@ class Game:
             self.window.blit(row_index, (2, square_size * (7 - i) + 2))
             b += c
 
-    def run(self) -> NoReturn:
+    def run(self) -> None:
         self.is_running = True
         pygame.display.set_caption("Zess")
         icon = pygame.image.load("res/images/zess-logo.png")
