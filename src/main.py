@@ -2,7 +2,7 @@ from typing import NoReturn
 from game import Game
 
 def main() -> NoReturn:
-    game = Game()
+    game = Game("white")
     game.run()
 
 if __name__ == "__main__":
