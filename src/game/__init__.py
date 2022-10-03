@@ -18,7 +18,6 @@ class Game:
         pygame.init()
         pygame.font.init()
         self.is_running = False
-        self.window = pygame.display.set_mode((self.display_size, self.display_size))
         self.display_size = display_size
         self.font = pygame.font.SysFont("arial", 25) # using arial as it is supported in virtually all platforms
         self.side = side
@@ -36,6 +35,7 @@ class Game:
             piece_image = pygame.image.load(f"res/images/pieces/b_{piece_type}.png")
             piece_image = pygame.transform.scale(piece_image, (piece_size, piece_size))
             self.piece_images.append(piece_image)
+        self.window = pygame.display.set_mode((self.display_size, self.display_size))
 
     def draw_board(self) -> None:
         square_size: int = int(self.display_size / 8)
