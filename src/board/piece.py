@@ -3,12 +3,12 @@ from position import Position
 from board.side import Side
 
 class PieceType(Enum):
-    PAWN = 0
-    KNIGHT = 1
-    BISHOP = 2
-    ROOK = 3
-    QUEEN = 4
-    KING = 5
+    PAWN = "pawn"
+    KNIGHT = "knight"
+    BISHOP = "bishop"
+    ROOK = "rook"
+    QUEEN = "queen"
+    KING = "king"
 
 class Piece:
     position: Position

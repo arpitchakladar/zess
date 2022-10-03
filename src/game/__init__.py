@@ -34,8 +34,19 @@ class Game:
         light_color = (232, 248, 245)
         def draw_square(position: Position, piece: Union[Piece, None]) -> NoReturn:
             i, j = position.column, (7 - position.row) # Pygame uses top left as the origin but in chess the bottom left square is the origin
+            if self.side == Side.BLACK:
+                i = 7 - i
+                j = 7 - j
             color = light_color if (i + j + a) % 2 == 0 else dark_color
-            pygame.draw.rect(self.window, color, pygame.Rect(i * square_size, j * square_size, square_size, square_size))
+            x = i * square_size
+            y = j * square_size
+            pygame.draw.rect(self.window, color, pygame.Rect(x, y, square_size, square_size))
+            if piece != None:
+                s = "w" if piece.side == Side.WHITE else "b"
+                piece_size = square_size * 0.8
+                piece_image = pygame.transform.scale(pygame.image.load(f"res/images/pieces/{s}_{piece.pieceType.value}.png"), (piece_size, piece_size))
+                offset = square_size * 0.1
+                self.window.blit(piece_image, (x + offset, y + offset))
 
         self.board.for_each_square(draw_square)
 
