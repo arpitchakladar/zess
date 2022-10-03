@@ -12,17 +12,17 @@ class Board:
     def arrange_pieces(self) -> NoReturn:
         for i in range(8):
             row = [None for i in range(8)]
-            pieceType = PieceType.KING
+            piece_type = PieceType.KING
             if i == 0 or i == 7:
-                pieceType = PieceType.ROOK
+                piece_type = PieceType.ROOK
             elif i == 1 or i == 6:
-                pieceType = PieceType.KNIGHT
+                piece_type = PieceType.KNIGHT
             elif i == 2 or i == 5:
-                pieceType = PieceType.BISHOP
+                piece_type = PieceType.BISHOP
             elif i == 3:
-                pieceType = PieceType.QUEEN
-            row[0] = Piece(Side.WHITE, pieceType, Position(i, 0))
-            row[7] = Piece(Side.BLACK, pieceType, Position(i, 7))
+                piece_type = PieceType.QUEEN
+            row[0] = Piece(Side.WHITE, piece_type, Position(i, 0))
+            row[7] = Piece(Side.BLACK, piece_type, Position(i, 7))
             row[1] = Piece(Side.WHITE, PieceType.PAWN, Position(i, 1))
             row[6] = Piece(Side.BLACK, PieceType.PAWN, Position(i, 6))
             self.pieces.append(row)

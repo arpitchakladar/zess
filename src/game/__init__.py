@@ -3,7 +3,7 @@ import pygame
 from position import Position
 from board import Board
 from board.side import Side
-from board.piece import Piece
+from board.piece import Piece, PieceType
 
 class Game:
     is_running: bool
@@ -12,6 +12,7 @@ class Game:
     font: pygame.font.Font
     side: Side
     board: Board
+    piece_images: list[pygame.Surface]
 
     def __init__(self, side: Side = Side.WHITE, display_size: int = 640):
         pygame.init()
@@ -22,6 +23,18 @@ class Game:
         self.side = side
         self.board = Board()
         self.board.arrange_pieces()
+        self.piece_images = []
+        square_size = self.display_size / 8
+        piece_size = square_size * 0.8
+        # The PieceType enum values will correspond to their indexes
+        # Each PieceType will occupy 2 elements, the first being white and second being black
+        for piece_type in PieceType:
+            piece_image = pygame.image.load(f"res/images/pieces/w_{piece_type}.png")
+            piece_image = pygame.transform.scale(piece_image, (piece_size, piece_size))
+            self.piece_images.append(piece_image)
+            piece_image = pygame.image.load(f"res/images/pieces/b_{piece_type}.png")
+            piece_image = pygame.transform.scale(piece_image, (piece_size, piece_size))
+            self.piece_images.append(piece_image)
 
     def draw_board(self) -> NoReturn:
         # Flipping the board if white is playing
@@ -42,11 +55,8 @@ class Game:
             y = j * square_size
             pygame.draw.rect(self.window, color, pygame.Rect(x, y, square_size, square_size))
             if piece != None:
-                s = "w" if piece.side == Side.WHITE else "b"
-                piece_size = square_size * 0.8
-                piece_image = pygame.transform.scale(pygame.image.load(f"res/images/pieces/{s}_{piece.pieceType.value}.png"), (piece_size, piece_size))
                 offset = square_size * 0.1
-                self.window.blit(piece_image, (x + offset, y + offset))
+                self.window.blit(self.piece_images[2 * piece.piece_type.value + piece.side.value], (x + offset, y + offset))
 
         self.board.for_each_square(draw_square)
 
