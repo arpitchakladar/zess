@@ -1,8 +1,8 @@
 from typing import Optional
 import pygame
-from position import Position
 from board import Board
-from board.side import Side
+from board.player import Player
+from board.position import Position
 from board.piece import Piece, PieceType
 
 class Game:
@@ -11,18 +11,18 @@ class Game:
     display_size: int
     square_size: int
     font: pygame.font.Font
-    side: Side
+    player: Player
     board: Board
     selected_piece: Optional[Piece]
     piece_images: list[pygame.surface.Surface]
 
-    def __init__(self, side: Side = Side.WHITE, display_size: int = 640) -> None:
+    def __init__(self, player: Player = Player.WHITE, display_size: int = 640) -> None:
         pygame.init()
         pygame.font.init()
         self.is_running = False
         self.display_size = display_size
         self.font = pygame.font.SysFont("arial", 25) # using arial as it is supported in virtually all platforms
-        self.side = side
+        self.player = player
         self.board = Board()
         self.window = None
         self.selected_piece = None
@@ -46,18 +46,19 @@ class Game:
         self.square_size: int = int(self.display_size / 8)
         dark_color: tuple[int, int, int] = (125, 206, 160)
         light_color: tuple[int, int, int] = (232, 248, 245)
+        selected_color: tuple[int, int, int] = (214, 219, 223)
         def draw_square(position: Position, piece: Optional[Piece]) -> bool:
             i, j = position.column, position.row
-            if self.side == Side.WHITE:
+            if self.player == Player.WHITE:
                 j = 7 - j
             color = dark_color
             is_selected = False
             if self.selected_piece != None:
                 assert self.selected_piece is not None
                 if self.selected_piece.position == position:
-                    color = (214, 219, 223)
+                    color = selected_color
                     is_selected = True
-            if not is_selected and (i + j + self.side.value) % 2 == 0:
+            if not is_selected and (i + j + self.player.value) % 2 == 0:
                 color = light_color
             x = i * self.square_size
             y = j * self.square_size
@@ -65,14 +66,14 @@ class Game:
             if piece != None:
                 assert piece is not None
                 offset = self.square_size * 0.1
-                window.blit(self.piece_images[2 * piece.piece_type.value + piece.side.value], (x + offset, y + offset))
+                window.blit(self.piece_images[2 * piece.piece_type.value + piece.player.value], (x + offset, y + offset))
             return True
 
         self.board.for_each_square(draw_square)
-        b, c = self.side.value * 7, 1 - 2 * self.side.value
+        b, c = self.player.value * 7, 1 - 2 * self.player.value
 
         for i in range(8):
-            color = light_color if (i + self.side.value) % 2 == 0 else dark_color
+            color = light_color if (i + self.player.value) % 2 == 0 else dark_color
             column_index = self.font.render(chr(b + 97), False, color)
             row_index = self.font.render(chr(b + 49), False, color)
             window.blit(column_index, (self.square_size * (i + 1) - 11, self.display_size - 20))
@@ -87,7 +88,7 @@ class Game:
             if piece != None:
                 piece_x = position.column * self.square_size
                 piece_y = position.row
-                if self.side == Side.WHITE:
+                if self.player == Player.WHITE:
                     piece_y = 7 - piece_y
                 piece_y *= self.square_size
                 if piece_x < x < (piece_x + self.square_size) and piece_y < y < (piece_y + self.square_size):

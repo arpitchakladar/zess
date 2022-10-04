@@ -1,6 +1,6 @@
 from enum import Enum
-from position import Position
-from board.side import Side
+from board.position import Position
+from board.player import Player
 
 piece_names = ["pawn", "knight", "bishop", "rook", "queen", "king"]
 
@@ -18,9 +18,9 @@ class PieceType(Enum):
 class Piece:
     position: Position
     piece_type: PieceType
-    side: Side
+    player: Player
 
-    def __init__(self, side: Side, piece_type: PieceType, position: Position) -> None:
+    def __init__(self, player: Player, piece_type: PieceType, position: Position) -> None:
         self.position = position
-        self.side = side
+        self.player = player
         self.piece_type = piece_type

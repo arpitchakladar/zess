@@ -1,5 +1,5 @@
 from enum import Enum
 
-class Side(Enum):
+class Player(Enum):
     WHITE = 0
     BLACK = 1
