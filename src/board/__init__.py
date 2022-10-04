@@ -27,12 +27,17 @@ class Board:
             row[6] = Piece(Side.BLACK, PieceType.PAWN, Position(i, 6))
             self.pieces.append(row)
 
-    def for_each_square(self, func: Callable[[Position, Optional[Piece]], None]) -> None:
+    def for_each_square(self, func: Callable[[Position, Optional[Piece]], bool]) -> None:
+        result = True # if func returns False, then stop
         for i in range(8):
             for j in range(8):
                 piece = self.pieces[i][j]
                 if piece == None:
-                    func(Position(i, j), None)
+                    result = func(Position(i, j), None)
                 else:
                     assert piece is not None
-                    func(piece.position, piece)
+                    result = func(piece.position, piece)
+                if not result:
+                    break
+            if not result:
+                break
