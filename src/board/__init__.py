@@ -5,27 +5,53 @@ from board.piece import Piece, PieceType
 from board.move import Move
 
 class Board:
-    pieces: list[list[Optional[Piece]]]
+    board: list[list[Optional[Piece]]]
+    turn: Player
+    move_history: list[Move]
+    king_moved: tuple[bool, bool]
 
     def __init__(self) -> None:
-        self.pieces = []
+        self.board = []
+        self.turn = Player.WHITE
+        self.move_history = []
+        self.king_moved = (False, False)
 
     def get_pawn_moves(self, piece: Piece) -> list[Move]:
         moves: list[Move] = []
-        a = 1 - 2 * piece.player.value
-        if 0 < piece.position.row < 7:
-            next_row = piece.position.row + a
-            if self.pieces[piece.position.column][next_row] == None:
-                moves.append(Move(piece, Position(piece.position.column, next_row)))
-                if piece.position.row == (piece.player.value * 7 + a) and self.pieces[piece.position.column][next_row + a]:
-                    moves.append(Move(piece, Position(piece.position.column, next_row + a)))
-            if piece.position.column < 7:
-                diagonal_piece = self.pieces[piece.position.column + 1][next_row]
+        increment = 1 - 2 * piece.player.value
+        row = piece.position.row
+        column = piece.position.column
+        if 0 < row < 7:
+            next_row = row + increment
+            # En passant
+            if increment * (row - piece.player.value * 7) == 4:
+                last_move = self.move_history[len(self.move_history) - 1]
+                if increment * (last_move.to_position.row - last_move.from_position.row) == 2:
+                    diagonal_piece: Optional[Piece] = None
+                    if column < 7:
+                        diagonal_piece = self.board[column + 1][row]
+                        if last_move.piece == diagonal_piece:
+                            moves.append(Move(piece, Position(column + 1, row + increment), diagonal_piece))
+                        else:
+                            diagonal_piece = None
+                    if diagonal_piece == None and column > 0:
+                        diagonal_piece = self.board[column - 1][row]
+                        if last_move.piece == diagonal_piece:
+                            moves.append(Move(piece, Position(column - 1, row + increment), diagonal_piece))
+            # Move to next square (or 2 squares)
+            if self.board[column][next_row] == None:
+                moves.append(Move(piece, Position(column, next_row)))
+                if row == (piece.player.value * 7 + increment) and self.board[column][next_row + increment] == None:
+                    moves.append(Move(piece, Position(column, next_row + increment)))
+            # Diagonal capture right for white (and vise-versa)
+            if column < 7:
+                diagonal_piece = self.board[column + 1][next_row]
                 if diagonal_piece != None:
                     assert diagonal_piece is not None
                     moves.append(Move(piece, diagonal_piece.position, diagonal_piece))
-            if piece.position.column > 0:
-                diagonal_piece = self.pieces[piece.position.column - 1][next_row]
+            # Diagonal capture left for white (and vise-versa)
+            if column > 0:
+                diagonal_piece = self.board[column - 1][next_row]
                 if diagonal_piece != None:
                     assert diagonal_piece is not None
                     moves.append(Move(piece, diagonal_piece.position, diagonal_piece))
@@ -51,13 +77,13 @@ class Board:
             row[7] = Piece(Player.BLACK, piece_type, Position(i, 7))
             row[1] = Piece(Player.WHITE, PieceType.PAWN, Position(i, 1))
             row[6] = Piece(Player.BLACK, PieceType.PAWN, Position(i, 6))
-            self.pieces.append(row)
+            self.board.append(row)
 
     def for_each_square(self, func: Callable[[Position, Optional[Piece]], bool]) -> None:
         result = True # if func returns False, then stop
         for i in range(8):
             for j in range(8):
-                piece = self.pieces[i][j]
+                piece = self.board[i][j]
                 if piece == None:
                     result = func(Position(i, j), None)
                 else:

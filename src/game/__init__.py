@@ -1,9 +1,6 @@
 from typing import Optional
 import pygame
-from board import Board
-from board.player import Player
-from board.position import Position
-from board.piece import Piece, PieceType
+from board import Board, Player, Position, Piece, PieceType
 
 class Game:
     is_running: bool
